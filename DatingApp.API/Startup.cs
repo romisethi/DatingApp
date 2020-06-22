@@ -32,8 +32,10 @@ namespace DatingApp.API
         {
             services.AddDbContext<DataContext>(x=> x.UseSqlite(
                 Configuration.GetConnectionString("DefaultConnection")));
+           // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddControllers();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => 
             {
@@ -46,6 +48,7 @@ namespace DatingApp.API
                     ValidateAudience = false
                 };
             });
+          
             services.AddCors();
         }
 
@@ -54,21 +57,25 @@ namespace DatingApp.API
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage(); 
             }
 
             //app.UseHttpsRedirection();
 
             app.UseRouting();
-             app.UseAuthorization();
+
+             app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            
             app.UseAuthentication();
-            app.UseCors(x=>x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-         
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+            endpoints.MapControllers();
             });
-           
         }
     }
 }

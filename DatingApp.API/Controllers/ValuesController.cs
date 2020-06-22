@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreApi2._2.Controllers
 {
-    [Authorize]
+   [Authorize]
     [Route("api/[controller]")]
     [ApiController]
 
@@ -23,7 +23,8 @@ namespace CoreApi2._2.Controllers
         }
 
         // GET api/values
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpGet]       
         public async Task<IActionResult> GetValues()
         {
             var values = await _context.Values.ToListAsync();
